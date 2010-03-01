@@ -549,6 +549,7 @@ struct t_creature
     uint32_t money;
     int32_t squad_leader_id;
     uint8_t sex;
+    char occupation[128];
 };
 //raw
 struct t_item_df40d

@@ -177,6 +177,15 @@ void SHM_Act (void)
             ((shm_cmd *)shm)->pingpong = DFPP_SUSPENDED;
             goto check_again;
 
+        case DFPP_GET_OCCUPATION:
+            address = ((shm_read_small *)shm)->address;
+			d_printf("offset = %p\n", address);
+			myStringPtr = getOccupation((void*) address);
+            ((shm_retval *)shm)->value = myStringPtr->length();
+            strncpy(shm+SHM_HEADER,myStringPtr->c_str(),myStringPtr->length()+1);// length + 1 for the null terminator
+            full_barrier
+            ((shm_retval *)shm)->pingpong = DFPP_RET_STRING;
+            goto check_again;
 
         default:
             ((shm_retval *)shm)->value = DFEE_INVALID_COMMAND;

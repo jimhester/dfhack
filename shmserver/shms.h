@@ -91,6 +91,8 @@ enum DF_PINGPONG
     // vector elements > 1MB are not supported because they don't fit into the shared memory
     DFPP_READ_ENTIRE_VECTOR, // read an entire vector (parameters are address of vector object and size of items)
     DFPP_RET_VECTOR_BODY, // a part of a vector is returned - no. of elements returned, no. of elements total, elements
+
+    DFPP_GET_OCCUPATION, // gets the occupation when given a creature vector
     
     NUM_DFPP
 };
@@ -151,5 +153,10 @@ typedef struct
 void SHM_Act (void);
 bool isValidSHM();
 uint32_t getPID();
+
+std::string * getOccupation(void * occupation);
+#ifdef WIN32
+void d_printf(const char *format, ...);
+#endif
 
 #endif

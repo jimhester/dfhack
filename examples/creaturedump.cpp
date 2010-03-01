@@ -188,6 +188,7 @@ int main (void)
         if(string(creaturestypes[temp.type].id) == "DWARF")
         {
             cout << "address: " << temp.origin << " creature type: " << creaturestypes[temp.type].id << ", position: " << temp.x << "x " << temp.y << "y "<< temp.z << "z" << endl;
+            cout << "occupation: " << temp.occupation << endl;
             bool addendl = false;
             if(temp.first_name[0])
             {

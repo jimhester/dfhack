@@ -749,6 +749,7 @@
         <Offset name="creature_labors">0x544</Offset>
         <Offset name="creature_happiness">0x610</Offset>
         <Offset name="creature_traits">0x700</Offset>
+        <Offset name="creature_occupation">0x314</Offset>
 
         <!-- tree and shrub offsets -->
         <Offset name="tree_desc_offset">0x70</Offset>
@@ -931,6 +932,7 @@
         <String name="md5">59ab29021aca9f3c66b1ab102fb3ceea</String>
         <!-- map_data = 0x01601D84 -->
         <!-- door: 0x8e15d4, no VTable rebase needed -->
+        
         <Address name="current_cursor_creature">0x01757F38</Address>
         <Address name="items">0x15BDF50</Address>
         <Offset name="item_materials">0x68</Offset>

@@ -87,6 +87,8 @@ public:
     uint32_t creature_traits_offset;
     uint32_t creature_likes_offset;
 
+    uint32_t creature_occupation_offset;
+
     uint32_t item_material_offset;
 
     uint32_t note_foreground_offset;
@@ -895,6 +897,7 @@ bool API::InitReadCreatures( uint32_t &numcreatures )
         d->creature_happiness_offset = minfo->getOffset ("creature_happiness");
         d->creature_traits_offset = minfo->getOffset ("creature_traits");
         d->creature_likes_offset = minfo->getOffset("creature_likes");
+        d->creature_occupation_offset = minfo->getOffset("creature_occupation");
 
         d->p_cre = new DfVector (d->p->readVector (creatures, 4));
         //InitReadNameTables();
@@ -1105,6 +1108,9 @@ bool API::getItemIndexesInBox(vector<uint32_t> &indexes,
 
 bool API::ReadCreature (const int32_t index, t_creature & furball)
 {
+    std::string tmpoccup;
+	uint32_t occupationptr;
+
     if(!d->creaturesInited) return false;
     // read pointer from vector at position
     uint32_t temp = * (uint32_t *) d->p_cre->at (index);
@@ -1124,7 +1130,15 @@ bool API::ReadCreature (const int32_t index, t_creature & furball)
     g_pProcess->read (temp + d->creature_last_name_offset, sizeof (t_lastname), (uint8_t *) &furball.last_name);
     g_pProcess->read (temp + d->creature_squad_name_offset, sizeof (t_squadname), (uint8_t *) &furball.squad_name);
 
-
+	// occupation
+	g_pProcess->readDWord( temp + d->creature_occupation_offset, occupationptr);
+	if(occupationptr)
+	{
+		tmpoccup = d->p->getOccupation(occupationptr);
+		strcpy(furball.occupation, tmpoccup.c_str());
+	}
+	else
+		strcpy(furball.occupation, "NULL");
 
     // labors
     g_pProcess->read (temp + d->creature_labors_offset, NUM_CREATURE_LABORS, furball.labors);

@@ -30,6 +30,7 @@ distribution.
 
 #include <windows.h>
 #include <stdarg.h>
+#include <string>
 
 #define DFhackCExport extern "C" __declspec(dllexport)
 
@@ -43,6 +44,29 @@ bool inited = 0;
 HANDLE shmHandle = 0;
 HANDLE DFSVMutex = 0;
 HANDLE DFCLMutex = 0;
+
+
+
+/* debug utility from 0x517A5D */
+void d_printf(const char *format, ...) {
+	va_list va;
+
+	char debugstring[4096];				// debug strings can be up to 4K.
+
+
+
+	va_start(va, format);
+
+	_vsnprintf_s(debugstring, sizeof(debugstring) - 2, _TRUNCATE, format, va);
+
+	va_end(va);
+
+
+
+	OutputDebugString(debugstring);
+
+}
+
 void SHM_Init ( void )
 {
     // check that we do this only once per process
@@ -756,4 +780,34 @@ DFhackCExport int SDL_Init(uint32_t flags)
     fprintf(stderr,"Initized HOOKS!\n");
     SHM_Init();
     return _SDL_Init(flags);
+}
+
+/*
+ * native call to the getOccupation function
+ */
+
+void (__fastcall *_showOccupation)(void * a1, unsigned short a2, std::string * a3,
+	unsigned short a4, unsigned short a5, unsigned short a6, int a7, int a8, int a9);
+
+std::string * getOccupation(void * occupation)
+{
+	std::string * test = new std::string("rien");
+	unsigned int mainmod;
+
+	mainmod = (unsigned int) GetModuleHandle(NULL);
+	d_printf("mainmod = %p\n", mainmod);
+	_showOccupation = (void (__fastcall *)(void *,unsigned short,std::string *,unsigned short,unsigned short,unsigned short,int,int,int))
+		(0xE107B0 - 0xB50000 + mainmod); /* d16 */
+	d_printf("calling occupation @%p, function %p", occupation, _showOccupation);
+	_showOccupation(occupation,
+		((unsigned short *) occupation)[13],
+		test,
+		((unsigned short *) occupation)[4],
+		((unsigned short *) occupation)[16],
+		((unsigned short *) occupation)[17],
+		((unsigned short *) occupation)[14],
+		((unsigned int *) occupation)[10],
+		((unsigned int *) occupation)[9]);
+	d_printf("output = %s\n", test->c_str());
+	return test;
 }

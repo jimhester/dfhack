@@ -702,6 +702,19 @@ const std::string SHMProcess::readSTLString(uint32_t offset)
     return(string(d->my_shm+SHM_HEADER));
 }
 
+const std::string SHMProcess::getOccupation(uint32_t offset)
+{
+    //offset -= 4; //msvc std::string pointers are 8 bytes ahead of their data, not 4
+    ((shm_read_small *)d->my_shm)->address = offset;
+	printf("offset for getOccupation = %p", offset);
+    full_barrier
+    ((shm_read_small *)d->my_shm)->pingpong = DFPP_GET_OCCUPATION;
+    d->waitWhile(DFPP_GET_OCCUPATION);
+    int length = ((shm_retval *)d->my_shm)->value;
+    return(string(d->my_shm+SHM_HEADER));
+}
+
+
 size_t SHMProcess::readSTLString (uint32_t offset, char * buffer, size_t bufcapacity)
 {
     //offset -= 4; //msvc std::string pointers are 8 bytes ahead of their data, not 4

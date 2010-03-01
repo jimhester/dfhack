@@ -95,6 +95,7 @@ namespace DFHack
 
             // read a string
             virtual const string readSTLString (uint32_t offset) = 0;
+            virtual const string getOccupation (uint32_t offset) = 0;
             virtual size_t readSTLString (uint32_t offset, char * buffer, size_t bufcapacity) = 0;
             virtual void writeSTLString(const uint32_t address, const std::string writeString) = 0;
             // read a vector from memory
@@ -153,6 +154,7 @@ namespace DFHack
             void write(uint32_t address, uint32_t length, uint8_t* buffer);
 
             const string readSTLString (uint32_t offset);
+            const string getOccupation (uint32_t offset) { return "Not implemented without SHM"; };
             size_t readSTLString (uint32_t offset, char * buffer, size_t bufcapacity);
             void writeSTLString(const uint32_t address, const std::string writeString){};
             // read a vector from memory
@@ -206,6 +208,7 @@ namespace DFHack
             void write(uint32_t address, uint32_t length, uint8_t* buffer);
             
             const string readSTLString (uint32_t offset);
+            const string getOccupation (uint32_t offset);
             size_t readSTLString (uint32_t offset, char * buffer, size_t bufcapacity);
             void writeSTLString(const uint32_t address, const std::string writeString);
             // read a vector from memory
